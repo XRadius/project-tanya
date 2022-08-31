@@ -1,0 +1,8 @@
+{
+  "editor.codeLens": false,
+  "editor.tabSize": 2,
+  "files.exclude": {
+    "*/bin": true,
+    "*/obj": true,
+  }
+}

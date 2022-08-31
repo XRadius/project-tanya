@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [{
+    "args": ["build", "${workspaceFolder}/src/Tanya.sln"],
+    "command": "dotnet",
+    "label": "build",
+    "problemMatcher": "$msCompile",
+    "type": "process",
+  }, {
+    "args": ["watch", "run", "--project", "${workspaceFolder}/src/Tanya.sln"],
+    "command": "dotnet",
+    "label": "watch",
+    "problemMatcher": "$msCompile",
+    "type": "process"
+  }]
+}

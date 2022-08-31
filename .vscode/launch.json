@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "cwd": "${workspaceFolder}/src/Tanya/bin/Debug/net6.0",
+    "name": "launch",
+    "preLaunchTask": "build",
+    "program": "${workspaceFolder}/src/Tanya/bin/Debug/net6.0/Tanya.dll",
+    "request": "launch",
+    "type": "coreclr"
+  }]
+}
