@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Tanya.Driver.Linux;
+using Tanya.Driver.Linux.Models;
 using Tanya.Game.Apex.Core;
 using Tanya.Game.Apex.Core.Interfaces;
 
@@ -76,7 +77,9 @@ namespace Tanya.Game.Apex.Services
                         {
                             await foreach (var map in _linux.MapsAsync(process.Pid).ConfigureAwait(false))
                             {
-                                if (map.Pathname.ToLower().EndsWith("r5apex.exe"))
+                                if (map.Pathname.ToLower().EndsWith("r5apex.exe")
+                                    || (map.Perms == MapEntryPermissions.Read && map.Pathname.StartsWith("/memfd"))
+                                    || map.Start == 0x140000000)
                                 {
                                     _runners.GetOrAdd(process.Pid, _ => Start(offsets, process.Pid, map.Start));
                                     knownSet.Add(process.Pid);
