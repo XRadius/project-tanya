@@ -23,7 +23,7 @@ namespace Tanya.Game.Apex.Services
             _cts = new CancellationTokenSource();
             _http = new HttpClient();
             _logger = logger;
-            _tcs = new TaskCompletionSource();
+            _tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         }
 
         #endregion
