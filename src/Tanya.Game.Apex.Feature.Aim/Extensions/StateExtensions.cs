@@ -17,12 +17,12 @@ namespace Tanya.Game.Apex.Feature.Aim.Extensions
                 return TargetType.None;
             }
 
-            if (state.Buttons.InSpeed != 0)
+            if (state.Buttons.InAttack != 0 && (state.Buttons.InZoom != 0 || localPlayer.VecPunchWeaponAngle.X != 0 || localPlayer.VecPunchWeaponAngle.Y != 0))
             {
-                return TargetType.All;
+                return state.Buttons.InSpeed != 0 ? TargetType.All : TargetType.Enemy;
             }
 
-            if (state.Buttons.InAttack != 0 && (state.Buttons.InZoom != 0 || localPlayer.VecPunchWeaponAngle.X != 0 || localPlayer.VecPunchWeaponAngle.Y != 0))
+            if (state.Buttons.InSpeed != 0)
             {
                 return TargetType.Enemy;
             }
