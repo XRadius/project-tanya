@@ -12,6 +12,7 @@ namespace Tanya.Game.Apex.Services
         private readonly HttpClient _http;
         private readonly ILogger<DataService> _logger;
         private readonly TaskCompletionSource _tcs;
+        private bool _isDisposed;
         private IOffsets? _offsets;
 
         #region Constructors
@@ -23,6 +24,32 @@ namespace Tanya.Game.Apex.Services
             _http = new HttpClient();
             _logger = logger;
             _tcs = new TaskCompletionSource();
+        }
+
+        #endregion
+
+        #region Destructors
+
+        ~DataService()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_isDisposed)
+            {
+                _http.Dispose();
+                _tcs.TrySetCanceled();
+            }
+
+            _isDisposed = true;
         }
 
         #endregion
@@ -74,17 +101,6 @@ namespace Tanya.Game.Apex.Services
                     await Task.Delay(_config.OffsetsCheck, _cts.Token).ConfigureAwait(false);
                 }
             }
-        }
-
-        #endregion
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            _http.Dispose();
-            _tcs.TrySetCanceled();
-            GC.SuppressFinalize(this);
         }
 
         #endregion

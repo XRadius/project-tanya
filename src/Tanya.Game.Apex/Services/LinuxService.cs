@@ -19,6 +19,7 @@ namespace Tanya.Game.Apex.Services
         private readonly ILogger<LinuxService> _logger;
         private readonly ConcurrentDictionary<int, Runner> _runners;
         private readonly IServiceProvider _serviceProvider;
+        private bool _isDisposed;
 
         #region Constructors
 
@@ -31,6 +32,31 @@ namespace Tanya.Game.Apex.Services
             _logger = logger;
             _runners = new ConcurrentDictionary<int, Runner>();
             _serviceProvider = serviceProvider;
+        }
+
+        #endregion
+
+        #region Destructors
+
+        ~LinuxService()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_isDisposed)
+            {
+                Cleanup();
+            }
+
+            _isDisposed = true;
         }
 
         #endregion
@@ -119,16 +145,6 @@ namespace Tanya.Game.Apex.Services
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<State>>();
             var state = new State(driver, logger, offsets, address);
             return Runner.Create(_config, features, state);
-        }
-
-        #endregion
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            Cleanup();
-            GC.SuppressFinalize(this);
         }
 
         #endregion

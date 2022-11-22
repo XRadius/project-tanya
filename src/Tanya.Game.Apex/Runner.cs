@@ -10,6 +10,7 @@ namespace Tanya.Game.Apex
         private readonly List<IFeature> _features;
         private readonly Looper _looper;
         private readonly State _state;
+        private bool _isDisposed;
 
         #region Constructors
 
@@ -30,6 +31,32 @@ namespace Tanya.Game.Apex
 
         #endregion
 
+        #region Destructors
+
+        ~Runner()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_isDisposed)
+            {
+                _cts.Cancel();
+                _looper.Dispose();
+            }
+
+            _isDisposed = true;
+        }
+
+        #endregion
+
         #region Methods
 
         private void Process()
@@ -42,17 +69,6 @@ namespace Tanya.Game.Apex
                 _state.Update(frameTime);
                 _features.ForEach(x => x.Tick(frameTime, _state));
             }
-        }
-
-        #endregion
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            _cts.Cancel();
-            _looper.Dispose();
-            GC.SuppressFinalize(this);
         }
 
         #endregion

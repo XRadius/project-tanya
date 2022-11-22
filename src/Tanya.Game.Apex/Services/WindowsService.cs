@@ -16,6 +16,7 @@ namespace Tanya.Game.Apex.Services
         private readonly ILogger<WindowsService> _logger;
         private readonly IServiceProvider _serviceProvider;
         private Runner? _runner;
+        private bool _isDisposed;
 
         #region Constructors
 
@@ -26,6 +27,31 @@ namespace Tanya.Game.Apex.Services
             _dataService = dataService;
             _logger = logger;
             _serviceProvider = serviceProvider;
+        }
+
+        #endregion
+
+        #region Destructors
+
+        ~WindowsService()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_isDisposed)
+            {
+                _runner?.Dispose();
+            }
+
+            _isDisposed = true;
         }
 
         #endregion
@@ -56,16 +82,6 @@ namespace Tanya.Game.Apex.Services
                     break;
                 }
             }
-        }
-
-        #endregion
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            _runner?.Dispose();
-            GC.SuppressFinalize(this);
         }
 
         #endregion

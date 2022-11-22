@@ -7,6 +7,7 @@ namespace Tanya.Logging
     {
         private readonly ConcurrentDictionary<string, Logger> _loggers;
         private readonly LoggerWriter _writer;
+        private bool _isDisposed;
 
         #region Constructors
 
@@ -18,13 +19,28 @@ namespace Tanya.Logging
 
         #endregion
 
-        #region Implementation of IDisposable
+        #region Destructors
+
+        ~LoggerProvider()
+        {
+            Dispose(false);
+        }
 
         public void Dispose()
         {
-            _loggers.Clear();
-            _writer.Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_isDisposed)
+            {
+                _loggers.Clear();
+                _writer.Dispose();
+            }
+
+            _isDisposed = true;
         }
 
         #endregion
