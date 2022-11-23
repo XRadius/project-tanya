@@ -6,9 +6,9 @@ namespace Tanya.Game.Apex
 {
     public class Runner : IDisposable
     {
+        private readonly Config _config;
         private readonly CancellationTokenSource _cts;
         private readonly List<IFeature> _features;
-        private readonly Looper _looper;
         private readonly State _state;
         private bool _isDisposed;
 
@@ -16,9 +16,9 @@ namespace Tanya.Game.Apex
 
         private Runner(Config config, IEnumerable<IFeature> features, State state)
         {
+            _config = config;
             _cts = new CancellationTokenSource();
             _features = features.ToList();
-            _looper = Looper.Create(TimeSpan.FromMilliseconds(1000f / config.FramesPerSecond));
             _state = state;
         }
 
@@ -49,7 +49,6 @@ namespace Tanya.Game.Apex
             if (disposing && !_isDisposed)
             {
                 _cts.Cancel();
-                _looper.Dispose();
             }
 
             _isDisposed = true;
@@ -61,9 +60,9 @@ namespace Tanya.Game.Apex
 
         private void Process()
         {
-            var events = new[] { _looper, _cts.Token.WaitHandle };
-
-            while (WaitHandle.WaitAny(events) == 0)
+            var looper = new Looper();
+            
+            while (looper.Tick(_config.FramesPerSecond, _cts.Token))
             {
                 var frameTime = DateTime.UtcNow;
                 _state.Update(frameTime);

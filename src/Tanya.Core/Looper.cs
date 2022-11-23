@@ -1,52 +1,39 @@
 ﻿namespace Tanya.Core
 {
-    public class Looper : EventWaitHandle
+    public class Looper
     {
-        private readonly Timer _timer;
-        private bool _isDisposed;
-
-        #region Constructors
-
-        private Looper() : base(false, EventResetMode.AutoReset)
-        {
-            _timer = new Timer(_ => Set());
-        }
-
-        public static Looper Create(TimeSpan interval)
-        {
-            var looper = new Looper();
-            looper.SetInterval(interval);
-            return looper;
-        }
-
-        #endregion
-
-        #region Destructors
-
-        ~Looper()
-        {
-            Dispose(false);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing && !_isDisposed)
-            {
-                _timer.Dispose();
-            }
-
-            _isDisposed = true;
-        }
-
-        #endregion
+        private int _currentFrame;
+        private int? _framesPerSecond;
+        private TimeSpan _interval;
+        private DateTime _startTime;
 
         #region Methods
 
-        private void SetInterval(TimeSpan duration)
+        public bool Tick(int framesPerSecond, CancellationToken token)
         {
-            _timer.Change(0, (int)duration.TotalMilliseconds);
+            if (_framesPerSecond != framesPerSecond)
+            {
+                _currentFrame = 0;
+                _framesPerSecond = Math.Max(1, framesPerSecond);
+                _interval = TimeSpan.FromMilliseconds(1000f / _framesPerSecond.Value);
+                _startTime = DateTime.UtcNow;
+            }
+
+            while (!token.IsCancellationRequested)
+            {
+                var elapsedTime = DateTime.UtcNow - _startTime;
+                var targetFrame = Math.Floor(elapsedTime / _interval);
+
+                if (_currentFrame < targetFrame)
+                {
+                    _currentFrame++;
+                    return true;
+                }
+
+                Thread.Sleep(1);
+            }
+
+            return false;
         }
 
         #endregion
