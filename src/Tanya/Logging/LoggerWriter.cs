@@ -22,7 +22,7 @@ namespace Tanya.Logging
         public static LoggerWriter Create()
         {
             var writer = new LoggerWriter();
-            Task.Factory.StartNew(writer.WriteAsync, TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(writer.ProcessAsync, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
             return writer;
         }
 
@@ -62,7 +62,7 @@ namespace Tanya.Logging
             _event.Set();
         }
 
-        private async Task WriteAsync()
+        private async Task ProcessAsync()
         {
             await using var fileStream = File.Open("Tanya.log", FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
             await using var writer = new StreamWriter(fileStream);

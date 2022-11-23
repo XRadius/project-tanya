@@ -15,8 +15,8 @@ namespace Tanya.Game.Apex.Services
         private readonly DataService _dataService;
         private readonly ILogger<WindowsService> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private Runner? _runner;
         private bool _isDisposed;
+        private Runner? _runner;
 
         #region Constructors
 

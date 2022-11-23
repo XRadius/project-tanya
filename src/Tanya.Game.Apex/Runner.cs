@@ -25,7 +25,8 @@ namespace Tanya.Game.Apex
         public static Runner Create(Config config, IEnumerable<IFeature> features, State state)
         {
             var runner = new Runner(config, features, state);
-            Task.Factory.StartNew(runner.Process, TaskCreationOptions.LongRunning);
+            var thread = new Thread(runner.Process) { IsBackground = true };
+            thread.Start();
             return runner;
         }
 
@@ -61,7 +62,7 @@ namespace Tanya.Game.Apex
         private void Process()
         {
             var looper = new Looper();
-            
+
             while (looper.Tick(_config.FramesPerSecond, _cts.Token))
             {
                 var frameTime = DateTime.UtcNow;
