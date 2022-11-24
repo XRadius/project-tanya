@@ -1,7 +1,7 @@
-namespace Tanya.Driver.Linux.Models
+namespace Tanya.Driver.Linux.Enums
 {
     [Flags]
-    public enum MapEntryPermissions
+    public enum PermissionType
     {
         None,
         Read,

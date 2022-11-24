@@ -40,7 +40,7 @@ namespace Tanya.Game.Apex.Feature.Aim
             foreach (var target in state.IterateTargets().Where(x => x.IsValid(localPlayer) && x.Visible))
             {
                 // Calculate the distance.
-                var distance = localPlayer.LocalOrigin.Distance(target.LocalOrigin) * Constants.UnitToMeter;
+                var distance = localPlayer.LocalOrigin.Distance2(target.LocalOrigin) * Constants.UnitToMeter;
                 if (distance >= _config.Distance) continue;
 
                 // Calculate the view angle delta.
@@ -78,7 +78,7 @@ namespace Tanya.Game.Apex.Feature.Aim
         {
             var correctAngle = AdjustSelf(localPlayer).GetDesiredAngle(AdjustTarget(target));
             var currentAngle = localPlayer.ViewAngle + (_targetPreviousVecPunchWeaponAngle ?? Vector.Origin);
-            var distance = localPlayer.LocalOrigin.Distance(target.LocalOrigin) * Constants.UnitToMeter;
+            var distance = localPlayer.LocalOrigin.Distance2(target.LocalOrigin) * Constants.UnitToMeter;
             var deadzoneAngle = new Deadzone(correctAngle, _config.PitchDeadzone / distance, _config.YawDeadzone / distance).ToVector(currentAngle);
             var smoothAngle = _config.GetSmoothAngle(currentAngle, deadzoneAngle, GetPercentage(frameTime));
             localPlayer.ViewAngle = smoothAngle - localPlayer.VecPunchWeaponAngle * _config.Recoil;
@@ -106,14 +106,13 @@ namespace Tanya.Game.Apex.Feature.Aim
         {
             return target.IsValid(localPlayer)
                    && target.Visible
-                   && target.LocalOrigin.Distance(targetPreviousOrigin) * Constants.UnitToMeter < 5;
+                   && target.LocalOrigin.Distance2(targetPreviousOrigin) * Constants.UnitToMeter < 5;
         }
 
         #endregion
 
         #region Implementation of IFeature
 
-        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public void Tick(DateTime frameTime, State state)
         {
             if (state.Players.TryGetValue(state.LocalPlayer, out var localPlayer))

@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Tanya.Core.Models
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public record Vector
     {
         public static Vector Origin = new(0, 0, 0);
@@ -19,11 +21,19 @@ namespace Tanya.Core.Models
 
         #region Methods
 
-        public float Distance(Vector otherVector)
+        public float Distance2(Vector otherVector)
         {
             var x = X - otherVector.X;
             var y = Y - otherVector.Y;
             return MathF.Sqrt(x * x + y * y);
+        }
+
+        public float Distance3(Vector otherVector)
+        {
+            var x = X - otherVector.X;
+            var y = Y - otherVector.Y;
+            var z = Z - otherVector.Z;
+            return MathF.Sqrt(x * x + y * y + z * z);
         }
 
         #endregion

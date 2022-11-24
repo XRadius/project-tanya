@@ -1,8 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Tanya.Core.Interfaces;
 
 namespace Tanya.Core.Types
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class UInt16Type : IType<ushort>
     {
         public static readonly UInt16Type Instance = new();

@@ -5,6 +5,7 @@ using Tanya.Game.Apex.Core.Interfaces;
 
 namespace Tanya.Game.Apex.Core.Utilities
 {
+    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     public class LastVisibleTime : IUpdatable
     {
         private readonly Access<float> _value;
@@ -29,7 +30,6 @@ namespace Tanya.Game.Apex.Core.Utilities
 
         #region Implementation of IUpdatable
 
-        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public void Update(DateTime frameTime)
         {
             if (_value.Update(frameTime))

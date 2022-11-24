@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using Tanya.Driver.Linux.Enums;
 using Tanya.Driver.Linux.Models;
 
 namespace Tanya.Driver.Linux.Utilities
@@ -32,13 +33,13 @@ namespace Tanya.Driver.Linux.Utilities
             return new MapEntry(devMajor, devMinor, end, inode, offset, pathname, perms, start);
         }
 
-        private static MapEntryPermissions Permissions(Match match)
+        private static PermissionType Permissions(Match match)
         {
-            var result = MapEntryPermissions.None;
-            if (match.Groups[3].Value == "r") result |= MapEntryPermissions.Read;
-            if (match.Groups[4].Value == "w") result |= MapEntryPermissions.Write;
-            if (match.Groups[5].Value == "x") result |= MapEntryPermissions.Execute;
-            if (match.Groups[6].Value == "s") result |= MapEntryPermissions.Shared;
+            var result = PermissionType.None;
+            if (match.Groups[3].Value == "r") result |= PermissionType.Read;
+            if (match.Groups[4].Value == "w") result |= PermissionType.Write;
+            if (match.Groups[5].Value == "x") result |= PermissionType.Execute;
+            if (match.Groups[6].Value == "s") result |= PermissionType.Shared;
             return result;
         }
 
