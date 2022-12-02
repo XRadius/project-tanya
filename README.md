@@ -43,7 +43,7 @@ vim /etc/fstab
 4. Add the following line:
 
 ```
-proc /proc proc defaults,nosuid,nodev,noexec,relatime,hidepid=2 0 0
+proc /proc proc defaults,nosuid,nodev,noexec,relatime,hidepid=1 0 0
 ```
 
 5. Reboot your system:
